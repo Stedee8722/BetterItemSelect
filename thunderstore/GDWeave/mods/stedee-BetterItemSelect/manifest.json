@@ -1,0 +1,10 @@
+{
+  "Id": "stedee.BetterItemSelect",
+  "PackPath": "BetterItemSelect.pck",
+  "Metadata": {
+    "Name": "BetterItemSelect",
+    "Author": "stedee",
+    "Version": "0.0.1",
+    "Description": "Mod to make selecting items in mail easier"
+  }
+}
