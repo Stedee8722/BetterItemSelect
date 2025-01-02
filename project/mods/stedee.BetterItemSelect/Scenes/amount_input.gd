@@ -7,7 +7,7 @@ var entry
 signal _amount_selected
 
 func _ready():
-	pass
+	set_process_input(true)
 
 func ask_amount(id, item_data, icon):
 	ref = id
@@ -44,5 +44,14 @@ func _on_half_Button_pressed():
 func _on_all_Button_pressed():
 	var count = idata["count"]
 	entry = {"idata": idata, "count": count}
+	emit_signal("_amount_selected", entry)
+	visible = false
+
+func _input(ev):
+	if Input.is_key_pressed(KEY_ENTER):
+		_on_done_Button_pressed()
+
+func _on_close_Button_pressed():
+	entry = {"idata": idata, "count": 0}
 	emit_signal("_amount_selected", entry)
 	visible = false

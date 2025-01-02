@@ -54,6 +54,7 @@ func _item_pressed(slot, item):
 		if idata.keys().has("count") && idata["count"] > 1:
 			$"../main/".ask_amount(item["ref"], idata, data.icon)
 			var entry = yield($"../main/", "_amount_selected")
+			if entry["count"] == 0: return
 			new_data = split_stack(entry["idata"], entry["count"])
 		if new_data["ref"] == item["ref"]:
 			slot._highlight( not slot.highlighted)
