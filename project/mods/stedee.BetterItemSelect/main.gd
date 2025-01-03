@@ -50,3 +50,69 @@ func bulk_remove_item(item_id, count):
 
 	PlayerData.emit_signal("_inventory_refresh")
 	PlayerData.emit_signal("_hotbar_refresh")
+
+func _add_raw_item_no_count_check(data, save = true):
+	if PlayerData.inventory.size() >= 10000:
+		PlayerData._send_notification("inventory full, item trashed!", 1)
+		return - 1
+	
+	data = _validate_item_safety_no_count_check(data)
+	PlayerData.inventory.append(data)
+	if save:
+		PlayerData.emit_signal("_inventory_refresh")
+		
+func _validate_item_safety_no_count_check(item_data, filter_unobtainable = true):
+	var FALLBACK_ITEM = {"id": "fish_lake_salmon", "ref": randi(), "size": 60.0, "quality": 0, "tags": [], "custom_name": ""}
+	
+	if not (item_data is Dictionary):
+		return FALLBACK_ITEM
+	
+	var required_keys = ["id", "ref", "size", "quality"]
+	for key in required_keys:
+		if not item_data.keys().has(key):
+			return FALLBACK_ITEM
+	
+	var item_id = str(item_data.id)
+	var size = item_data.size
+	var quality = item_data.quality
+	var ref = item_data.ref
+	var tags = item_data.tags if item_data.keys().has("tags") else []
+	var custom_name = item_data.custom_name if item_data.keys().has("custom_name") else ""
+	var count = item_data.count if item_data.keys().has("count") else 1
+	
+	
+	if not Globals.item_data.keys().has(item_id):
+		print("Item Does Not Exist.")
+		return FALLBACK_ITEM
+	
+	
+	if filter_unobtainable:
+		var idata = Globals.item_data[item_id]["file"]
+		if idata.unobtainable:
+			return FALLBACK_ITEM
+	
+	
+	if not (size is float or size is int): size = 60.0
+	else: size = clamp(size, 0.01, 999999999.0)
+	
+	if not (quality is int): quality = 0
+	else: quality = clamp(quality, 0, PlayerData.QUALITY_DATA.size() - 1)
+	
+	if not (ref is int): ref = randi()
+	if ref == 0 and filter_unobtainable: ref = randi()
+	
+	if not (tags is Array): tags = []
+	else:
+		var new_tags = []
+		for i in tags: new_tags.append(str(tags[i]))
+		tags.clear()
+		tags = new_tags
+	
+	custom_name = str(custom_name).left(28)
+	custom_name = custom_name.replace("[", "")
+	custom_name = custom_name.replace("]", "")
+	
+	# no count check
+	#count = clamp(count, 1, 99)
+	
+	return {"id": item_id, "ref": ref, "size": size, "quality": quality, "tags": tags, "custom_name": custom_name, "count": count}

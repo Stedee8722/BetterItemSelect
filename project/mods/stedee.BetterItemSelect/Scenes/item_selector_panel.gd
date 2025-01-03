@@ -2,8 +2,6 @@ extends VBoxContainer
 
 onready var item_select = $"/root/stedeeBetterItemSelect".item_select
 
-var selected = []
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var box = $Panel / Control / ScrollContainer / GridContainer
@@ -29,6 +27,18 @@ func _ready():
 		index += 1
 	
 	get_parent().get_node("Label").text = "SELECT ITEMS (0/" + str(item_select.max_items) + ")"
+
+func _process(delta):
+	var flag = false
+	for ref in item_select.selected:
+		if PlayerData._find_item_code(ref)["count"] > 99:
+			flag = true
+			break
+			
+	if flag:
+		$RichTextLabel.visible = true
+	else:
+		$RichTextLabel.visible = false
 
 func _item_pressed(slot, item):
 	print(item)
@@ -73,7 +83,7 @@ func split_stack(data, count):
 		randomize()
 		var ref = randi()
 		new_data["ref"] = ref
-		PlayerData._add_raw_item(new_data)
+		$"/root/stedeeBetterItemSelect"._add_raw_item_no_count_check(new_data)
 		return new_data
 	else:
 		return new_data

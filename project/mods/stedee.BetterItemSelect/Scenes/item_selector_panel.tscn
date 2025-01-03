@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Assets/Themes/panel_med.tres" type="StyleBox" id=1]
 [ext_resource path="res://mods/stedee.BetterItemSelect/Scenes/item_selector_panel.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Themes/main.tres" type="Theme" id=3]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -74,3 +75,16 @@ size_flags_vertical = 3
 custom_constants/vseparation = 24
 custom_constants/hseparation = 24
 columns = 10
+
+[node name="RichTextLabel" type="Label" parent="."]
+visible = false
+margin_top = 862.0
+margin_right = 1896.0
+margin_bottom = 932.0
+rect_min_size = Vector2( 0, 70 )
+theme = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "Warning: Gifting more than 99 items will result in the game checking and discarding all the extra items if the receiver doesn't have a mod or some way to bypass the check"
+align = 1
+valign = 1
+autowrap = true
