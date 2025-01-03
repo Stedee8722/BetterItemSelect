@@ -9,3 +9,7 @@
 ## 0.0.3
 
 * Fixed a bug where splitting when having more than 99 items eats all the extra items
+
+## 0.0.4
+
+* Fixed a bug where cancelling after spliting would duplicate the selected stack

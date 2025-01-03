@@ -6,6 +6,8 @@ onready var item_select = $"/root/stedeeBetterItemSelect".item_select
 func _ready():
 	var box = $Panel / Control / ScrollContainer / GridContainer
 	
+	item_select.connect("_finished", self, "finish_selection")
+	
 	for child in box.get_children(): child.queue_free()
 	
 	var index = 0
@@ -97,6 +99,7 @@ func merge_stack(data, og_ref):
 	assert(i, "Uhh this shouldn't have happened!")
 	var index = PlayerData.inventory.find(i)
 	PlayerData.inventory[index]["count"] += data["count"]
+	PlayerData._remove_item(data["ref"], false, false, true)
 		
 	PlayerData.emit_signal("_inventory_refresh")
 	PlayerData.emit_signal("_hotbar_refresh")
@@ -115,3 +118,10 @@ func _split_item_pressed(slot, item, original_ref):
 		slot._highlight( not slot.highlighted)
 		return
 	merge_stack(item, original_ref)
+
+func finish_selection(data):
+	if data: return
+	
+	var box = $Panel2 / Control / ScrollContainer / GridContainer
+	for child in box.get_children():
+		child.emit_signal("pressed")
